@@ -1,0 +1,13 @@
+# Binaries
+bin/
+*.exe
+*.out
+
+# Go
+/vendor/
+/coverage.out
+
+# Env
+.env
+
+.claude
