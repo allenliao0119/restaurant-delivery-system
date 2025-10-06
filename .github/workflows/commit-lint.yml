@@ -1,0 +1,85 @@
+name: CI - Commit Lint & Checklist Update
+
+on:
+  push:
+    branches:
+      - main
+      - dev
+      - feat/**
+      - hotfix/**
+
+jobs:
+  # --------------------------------------------------
+  # 1️⃣ Commit Message Lint
+  # --------------------------------------------------
+  commit-lint:
+    name: 🧾 Lint Commit Messages
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Validate commit messages
+        uses: wagoid/commitlint-github-action@v5
+        with:
+          configFile: commitlint.config.js
+
+  # --------------------------------------------------
+  # 2️⃣ Checklist Auto Update
+  # --------------------------------------------------
+  checklist:
+    name: ✅ Update Issue Checklist
+    runs-on: ubuntu-latest
+    needs: commit-lint
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Extract latest commit message
+        id: commit
+        run: |
+          echo "MESSAGE=$(git log -1 --pretty=%B)" >> $GITHUB_ENV
+
+      - name: Update checklist
+        uses: actions/github-script@v7
+        with:
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          script: |
+            const msg = process.env.MESSAGE
+            const issueMatch = msg.match(/#(\d+)/)
+            const taskMatches = [...msg.matchAll(/task:(\d+)/g)]
+
+            if (!issueMatch || taskMatches.length === 0) {
+              console.log("ℹ️ No issue or task found in commit message.")
+              return
+            }
+
+            const issue_number = parseInt(issueMatch[1])
+            const issue = await github.rest.issues.get({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              issue_number
+            })
+
+            let body = issue.data.body.split("\n")
+
+            taskMatches.forEach(m => {
+              const taskIndex = parseInt(m[1])
+              console.log(`🔹 Marking task #${taskIndex} as done.`)
+              let count = 0
+              body = body.map(line => {
+                if (line.match(/- \[ \]/)) {
+                  count++
+                  if (count === taskIndex) {
+                    return line.replace("- [ ]", "- [x]")
+                  }
+                }
+                return line
+              })
+            })
+
+            await github.rest.issues.update({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              issue_number,
+              body: body.join("\n")
+            })
+
+            console.log(`✅ Updated checklist for Issue #${issue_number}`)
