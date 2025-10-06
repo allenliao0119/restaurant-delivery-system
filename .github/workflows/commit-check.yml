@@ -10,11 +10,35 @@ on:
 
 jobs:
   # --------------------------------------------------
+  # 0️⃣ Check Commit Format
+  # --------------------------------------------------
+  check-format:
+    name: 🔍 Check Commit Format
+    runs-on: ubuntu-latest
+    outputs:
+      should_run: ${{ steps.check.outputs.should_run }}
+    steps:
+      - uses: actions/checkout@v4
+      - name: Check if commit has issue and task
+        id: check
+        run: |
+          MESSAGE=$(git log -1 --pretty=%B)
+          if echo "$MESSAGE" | grep -qE '\(#[0-9]+,\s*task:[0-9]+\)'; then
+            echo "should_run=true" >> $GITHUB_OUTPUT
+            echo "✅ Commit contains (#issue, task:n) format"
+          else
+            echo "should_run=false" >> $GITHUB_OUTPUT
+            echo "⏭️ Skipping - no (#issue, task:n) format found"
+          fi
+
+  # --------------------------------------------------
   # 1️⃣ Commit Message Lint
   # --------------------------------------------------
   commit-lint:
     name: 🧾 Lint Commit Messages
     runs-on: ubuntu-latest
+    needs: check-format
+    if: needs.check-format.outputs.should_run == 'true'
     steps:
       - uses: actions/checkout@v4
       - name: Validate commit messages
@@ -28,7 +52,8 @@ jobs:
   checklist:
     name: ✅ Update Issue Checklist
     runs-on: ubuntu-latest
-    needs: commit-lint
+    needs: [check-format, commit-lint]
+    if: needs.check-format.outputs.should_run == 'true'
     permissions:
       issues: write
       contents: read
@@ -68,9 +93,9 @@ jobs:
               console.log(`🔹 Marking task #${taskIndex} as done.`)
               let count = 0
               body = body.map(line => {
-                if (line.match(/- \[ \]/)) {
+                if (line.match(/- \[[x ]\]/)) {
                   count++
-                  if (count === taskIndex) {
+                  if (count === taskIndex && line.match(/- \[ \]/)) {
                     return line.replace("- [ ]", "- [x]")
                   }
                 }
