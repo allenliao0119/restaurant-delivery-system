@@ -68,9 +68,9 @@ jobs:
               console.log(`🔹 Marking task #${taskIndex} as done.`)
               let count = 0
               body = body.map(line => {
-                if (line.match(/- \[ \]/)) {
+                if (line.match(/- \[[x ]\]/)) {
                   count++
-                  if (count === taskIndex) {
+                  if (count === taskIndex && line.match(/- \[ \]/)) {
                     return line.replace("- [ ]", "- [x]")
                   }
                 }
