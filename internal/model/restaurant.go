@@ -3,11 +3,11 @@ package model
 import "time"
 
 type Restaurant struct {
-	ID        string `gorm:"type:uuid;default:gen_random_uuid();primaryKey"`
-	OwnerID   string `gorm:"type:uuid"`
-	Name      string
-	Address   string
-	Phone     string
-	CreatedAt time.Time
-	UpdatedAt time.Time
+	ID        string    `xorm:"pk uuid default gen_random_uuid()"`
+	OwnerID   string    `xorm:"uuid notnull index"` // FK -> users.id（以 SQL 方式另加）
+	Name      string    `xorm:"varchar(100) notnull index"`
+	Address   string    `xorm:"text"`
+	Phone     string    `xorm:"varchar(20)"`
+	CreatedAt time.Time `xorm:"created"`
+	UpdatedAt time.Time `xorm:"updated"`
 }

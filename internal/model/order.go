@@ -3,12 +3,12 @@ package model
 import "time"
 
 type Order struct {
-	ID           string  `gorm:"type:uuid;default:gen_random_uuid();primaryKey"`
-	CustomerID   string  `gorm:"type:uuid"`
-	RestaurantID string  `gorm:"type:uuid"`
-	DeliveryID   *string `gorm:"type:uuid"`
-	Status       string  `gorm:"type:varchar(20)"`
-	TotalPrice   float64
-	CreatedAt    time.Time
-	UpdatedAt    time.Time
+	ID           string    `xorm:"pk uuid default gen_random_uuid()"`
+	CustomerID   string    `xorm:"uuid notnull index"`     // FK -> users.id
+	RestaurantID string    `xorm:"uuid notnull index"`     // FK -> restaurants.id
+	DeliveryID   *string   `xorm:"uuid null index"`        // FK -> users.id (delivery)
+	Status       string    `xorm:"varchar(20) notnull index"` // pending/confirmed/delivering/completed/cancelled
+	TotalPrice   float64   `xorm:"numeric(10,2) notnull default 0"`
+	CreatedAt    time.Time `xorm:"created"`
+	UpdatedAt    time.Time `xorm:"updated"`
 }
