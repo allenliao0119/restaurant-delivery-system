@@ -3,7 +3,7 @@
 **Feature Branch**: `001-delivery-platform`
 **Created**: 2025-11-01
 **Status**: Draft
-**Input**: User description: "I need to create a comprehensive system specification document for a food delivery platform (similar to FoodPanda and UberEats). The main user roles and their functions include: 1. Customer: Browse restaurants, place orders, track orders, make payments 2. Restaurant Owner: Manage menu, receive orders, prepare food, update order status 3. Delivery Driver: Accept orders, pick up food, deliver food, update delivery status 4. Platform Administrator: Manage users, handle disputes, monitor system, analyze data"
+**Input**: User description: "I need to create a comprehensive system specification document for a food delivery platform. The main user roles and their functions include: 1. Customer: Browse restaurants, place orders, track orders, make payments 2. Restaurant Owner: Manage menu, receive orders, prepare food, update order status 3. Delivery Driver: Accept orders, pick up food, deliver food, update delivery status 4. Platform Administrator: Manage users, handle disputes, monitor system, analyze data"
 
 ## User Scenarios & Testing
 
