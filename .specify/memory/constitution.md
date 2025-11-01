@@ -27,7 +27,7 @@ Follow-up TODOs:
 - None
 -->
 
-# Restaurant Delivery System Constitution
+# Food Delivery System Constitution
 
 ## Core Principles
 
@@ -45,7 +45,7 @@ Follow-up TODOs:
 - All public APIs and interfaces MUST have clear documentation
 
 **Rationale**: Poor code quality leads to technical debt, security vulnerabilities, and
-increased maintenance burden. Restaurant delivery systems handle sensitive customer data,
+increased maintenance burden. Food delivery systems handle sensitive customer data,
 payment information, and real-time operations requiring bulletproof reliability.
 
 ### II. Testing Standards (NON-NEGOTIABLE)
@@ -66,7 +66,7 @@ payment information, and real-time operations requiring bulletproof reliability.
 - Flaky tests MUST be fixed immediately or removed
 - All tests MUST pass before code review approval
 
-**Rationale**: Restaurant delivery systems operate in real-time with multiple concurrent
+**Rationale**: Food delivery systems operate in real-time with multiple concurrent
 users (customers, drivers, restaurants). Bugs in production directly impact revenue,
 customer satisfaction, and operational efficiency. Comprehensive testing is the only way
 to ensure reliability at scale.
@@ -91,7 +91,7 @@ to ensure reliability at scale.
   - Features MUST work consistently across web, iOS, and Android
   - Mobile-first responsive design for all web interfaces
 
-**Rationale**: Restaurant delivery involves three distinct user types with different needs
+**Rationale**: Food delivery involves three distinct user types with different needs
 but shared expectations for speed and reliability. Inconsistent UX leads to user confusion,
 support burden, and abandoned orders.
 
